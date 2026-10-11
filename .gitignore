@@ -1,0 +1,48 @@
+# 本地学习记录与私人材料：这些目录不应进入公开仓库
+学习记录/
+私人材料/
+local-data/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+
+# 私有素材与凭据
+教材原件/
+private/
+secrets/
+credentials*.json
+auth.json
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+# 制作、验证与本地工具
+临时制作文件/
+测试原始记录/
+.venv/
+venv/
+node_modules/
+.pytest_cache/
+*.log
+*.tmp
+*.bak
+dist/
+build/
+
+# 本机工具配置、数据库和缓存
+.codex/
+.agents/
+.ssh/
+.aws/
+.cache/
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db
+.netrc
