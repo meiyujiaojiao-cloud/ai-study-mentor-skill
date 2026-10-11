@@ -2,6 +2,8 @@
 
 [English](README.en.md) | [简体中文](README.md)
 
+**[Published: v0.1.3 · GitHub Release](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.1.3)**
+
 A Codex skill for guided self-study. Version 0.1.3 guides a small learning loop: topic → goal and baseline → short explanation and example → one exercise → feedback → next step.
 It is a set of Markdown instructions, not a standalone app. Reading or skipping practice is not evidence of mastery; one correct answer verifies only that exercise.
 
@@ -39,4 +41,4 @@ These check structure, local links and common secret/path patterns; they do not 
 ## License
 
 [MIT](LICENSE) — Copyright (c) 2026 AI Study Mentor.
-No third-party textbooks, model code or runtime libraries are bundled. Do not commit personal study records, credentials or API keys. Release status is determined by GitHub tags and Releases.
+No third-party textbooks, model code or runtime libraries are bundled. Do not commit personal study records, credentials or API keys. The first public release, [v0.1.3](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.1.3), is available.

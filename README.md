@@ -2,6 +2,8 @@
 
 [English](README.en.md) | [简体中文](README.md)
 
+**[已公开发布：v0.1.3 · GitHub Release](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.1.3)**
+
 面向自主学习者的 Codex 教学 Skill。V0.1.3 通过“学习主题 → 目标与基础 → 简短讲解 → 一道练习 → 答案反馈 → 下一步”引导学习。
 它是 Markdown 教学规则，不是独立应用。阅读和跳过练习不会被当作掌握证据；一次答对只验证本题。
 
@@ -51,7 +53,7 @@ V0.1.3 补充桌面手动验收：技能候选发现、显式调用、首轮诊�
 ## 许可与发布
 [MIT License](LICENSE) — Copyright (c) 2026 AI Study Mentor。
 源码未捆绑第三方库、教材或模型；验证工具和运行日志不属于发布内容。
-首次发布候选为 v0.1.3；发布状态以仓库标签和 Releases 为准，本文件不表示已经公开。
+首个公开版本 [v0.1.3](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.1.3) 已发布。
 [首次发布资料](docs/首次发布资料.md) 包含版本说明和仓库介绍，[发布前检查清单](tests/发布前检查清单.md) 列出未完成项。
 不要提交个人学习记录、教材原件、账号凭据或 API Key；.gitignore 不能替代逐文件审查。
 
