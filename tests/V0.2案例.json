@@ -1,0 +1,112 @@
+[
+  {
+    "id": "M01",
+    "split": "dev",
+    "domain": "数学",
+    "category": "概念混淆",
+    "prompt": "我想学分数加法，会整数加法。题目：1/2+1/3。我的答案：2/5，因为分子相加，分母也相加。请根据我的作答继续教我。",
+    "expected_evidence": "分母代表份大小；分母直接相加是首个偏差。可判本题概念混淆，不能判整体分数能力。",
+    "strategy": "比较相同单位的份，通分/图示，再换分数题。"
+  },
+  {
+    "id": "M02",
+    "split": "dev",
+    "domain": "数学",
+    "category": "题意误解",
+    "prompt": "我想学应用题，会分数乘法。题目：24支笔用掉1/4，还剩几支？我的答案：6支。我算24×1/4=6，算的是用掉多少，但把它当作题目要的数。请根据我的作答继续教我。",
+    "expected_evidence": "乘法正确，问剩余却报告用量；不是不会分数乘法。",
+    "strategy": "圈出所求量，对比用掉与剩余，换数复测。"
+  },
+  {
+    "id": "M03",
+    "split": "heldout",
+    "domain": "数学",
+    "category": "计算错误",
+    "prompt": "Teach me sale-price calculations in English. I know decimals. A book costs $18 and is 30% off. I pay 70%, so I calculated 18×0.7=12.4. Please respond to my work.",
+    "expected_evidence": "付款比例正确，乘法18×0.7应12.6；只见局部算术偏差，不能断言粗心或缺基础。",
+    "strategy": "保留公式，定位乘法/验算，换数字检查同一步。"
+  },
+  {
+    "id": "M04",
+    "split": "dev",
+    "domain": "数学",
+    "category": "基础知识不足",
+    "prompt": "我想把分数变小数。题目：3/4是多少？我答3.4，把中间的线换成小数点。我没有学过除法，也不知道平均分是什么意思。请根据我的作答继续教我。",
+    "expected_evidence": "错误转换有明确前置知识自述；不能用自述评价永久能力。",
+    "strategy": "先平均分小整数，单步检查，再回分数除法，不堆除法术语。"
+  },
+  {
+    "id": "M05",
+    "split": "dev",
+    "domain": "数学",
+    "category": "推理错误",
+    "prompt": "我想学逻辑推理。已知“如果下雨，地面就湿”。现在地面湿了，我答“一定下雨了”，因为结果出现就说明原因发生。请根据我的作答继续教我。",
+    "expected_evidence": "肯定后件；其他原因可致地湿。",
+    "strategy": "找反例、区分充分必要，再换场景检查推理，不能只背术语。"
+  },
+  {
+    "id": "M06",
+    "split": "heldout",
+    "domain": "数学",
+    "category": "无法确定错因",
+    "prompt": "我想学一元一次方程，会整数加减。题目：x+3=7。我答x=8，没有写步骤。请根据我的作答继续教我。",
+    "expected_evidence": "仅结果无法区分误读、抄错、计算或移项；需一个区分性的步骤/题意诊断问题。",
+    "strategy": "先问如何得到8或复述等式，不凭结果认定概念弱。",
+    "followup": "我刚才把题看成了x−1=7，所以才答8；原题加3我看错了。"
+  },
+  {
+    "id": "P01",
+    "split": "dev",
+    "domain": "Python",
+    "category": "概念混淆",
+    "prompt": "我想学Python列表读取，会创建列表。colors=[\"red\",\"green\",\"blue\"]，题目问colors[1]。我答red，因为Python的下标从1开始。请根据我的作答继续教我。",
+    "expected_evidence": "明确把下标起点当1；本题概念混淆。",
+    "strategy": "用位置与下标对照，换列表下标复测。"
+  },
+  {
+    "id": "P02",
+    "split": "heldout",
+    "domain": "Python",
+    "category": "题意误解",
+    "prompt": "我想学读Python循环。代码：total=0\nfor n in [1,2,3]:\n    total+=n\n题目问循环体执行几次。我答6，因为我算的是最终total，而不是次数。我会逐步跟踪变量。请根据我的作答继续教我。",
+    "expected_evidence": "total=6正确，所求循环次数应3；题意与变量量区分。",
+    "strategy": "区分计数与累计值，换列表/值检查所求量。"
+  },
+  {
+    "id": "P03",
+    "split": "dev",
+    "domain": "Python",
+    "category": "计算错误",
+    "prompt": "Teach me tracing Python variables in English. For x=7 followed by x+=5, I answered 11. I interpreted x+=5 as add 5 to the old x, and wrote 7+5=11. Please respond to my work.",
+    "expected_evidence": "赋值语义正确，7+5=12；不要重教全部运算符。",
+    "strategy": "保留语义，纠正加法并用不同初值/增量检查。"
+  },
+  {
+    "id": "P04",
+    "split": "dev",
+    "domain": "Python",
+    "category": "基础知识不足",
+    "prompt": "我想学Python函数。代码：def double(n):\n    return n*2\n题目问double(3)。我答n*2，因为我还没学过变量、把数字代入或乘法。请根据我的作答继续教我。",
+    "expected_evidence": "前置知识明确不足；返回表达式未代入。",
+    "strategy": "一次只补代入或重复加法，不长篇讲函数机制。"
+  },
+  {
+    "id": "P05",
+    "split": "heldout",
+    "domain": "Python",
+    "category": "推理错误",
+    "prompt": "Teach me checking whether a Python list is sorted. For [1,2,4,3], I answered sorted because 1<2, so the whole list must be increasing. Please respond to my work.",
+    "expected_evidence": "局部一对成立不代表全部；4>3反例。",
+    "strategy": "检查所有相邻关系，用前面正确后面逆序的新列表复测。"
+  },
+  {
+    "id": "P06",
+    "split": "dev",
+    "domain": "Python",
+    "category": "证据不足",
+    "prompt": "我想学Python列表切片。题目：[1,2,3][::-1]是什么？我答[3,2,1]，但这是别人告诉我的，我说不出为什么。请根据我的作答继续教我。",
+    "expected_evidence": "数值正确但没有独立推理证据；不可判理解通过或断言不会。",
+    "strategy": "问负步长作用或新的简短迁移题，等待，不因正确数值就宣布掌握。",
+    "followup": "我现在知道步长是−1表示从后往前逐个取；[4,5][::-1]是[5,4]。"
+  }
+]
