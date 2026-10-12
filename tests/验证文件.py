@@ -1,6 +1,8 @@
 """零依赖结构检查；不模拟模型、不证明教学行为。"""
 from pathlib import Path
 import re
+import json
+import importlib.util
 import unittest
 
 SENSITIVE = re.compile(
@@ -13,6 +15,18 @@ SENSITIVE = re.compile(
 )
 
 ROOT = Path(__file__).resolve().parents[1]
+
+def strings_in(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            yield key
+            yield from strings_in(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from strings_in(item)
+
 
 class SkillFiles(unittest.TestCase):
     def test_frontmatter(self):
@@ -28,6 +42,8 @@ class SkillFiles(unittest.TestCase):
                      "docs/新手安装与测试指南.md", "docs/首次发布资料.md",
                      "docs/V0.2设计规划.md", "tests/真实教学验收记录.md",
                      "tests/桌面教学验收记录.md", "tests/多语言教学验收.md",
+                     "references/错因诊断.md", "tests/V0.2案例.json", "tests/V0.2评分标准.md",
+                     "tests/运行对照测试.py", "tests/V0.2对照结果.json", "tests/V0.2对比报告.md",
                      "references/教学流程.md", "references/状态与扩展约定.md",
                      "examples/百分比教学示例.md", "tests/人工教学验证.md"):
             with self.subTest(name=name):
@@ -50,10 +66,33 @@ class SkillFiles(unittest.TestCase):
     def test_public_content(self):
         # 只输出位置，不把可能命中的秘密打印进日志。
         for file in ROOT.rglob("*"):
-            if ".git" not in file.relative_to(ROOT).parts and file.is_file() and file.suffix in {".md", ".py", ""}:
+            if ".git" not in file.relative_to(ROOT).parts and file.is_file() and file.suffix in {".md", ".py", ".json", ""}:
                 text = file.read_text(encoding="utf-8")
+                # 先解码JSON，避免把数学公式的转义反斜线当作网络路径；也检查键与嵌套值。
+                values = strings_in(json.loads(text)) if file.suffix == ".json" else [text]
                 with self.subTest(file=str(file.relative_to(ROOT))):
-                    self.assertIsNone(SENSITIVE.search(text), "疑似凭据或真实本机绝对路径")
+                    for value in values:
+                        self.assertFalse(bool(SENSITIVE.search(value)), "疑似凭据或真实本机绝对路径")
+
+    def test_comparison_cases(self):
+        cases = json.loads((ROOT / "tests/V0.2案例.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(cases), 12)
+        self.assertEqual(len({case["id"] for case in cases}), 12)
+        self.assertEqual(sum(case["split"] == "heldout" for case in cases), 4)
+        self.assertEqual({case["domain"] for case in cases}, {"数学", "Python"})
+        for case in cases:
+            self.assertTrue(case["prompt"] and case["expected_evidence"] and case["strategy"])
+
+    def test_cli_event_completion(self):
+        spec = importlib.util.spec_from_file_location("comparison_runner", ROOT / "tests/运行对照测试.py")
+        runner = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runner)
+        complete = b'{"type":"turn.completed"}\n{"type":"item.completed","item":{"type":"agent_message","text":"answer"}}\n'
+        self.assertTrue(runner.parse_events(complete)["completed"])
+        self.assertEqual(runner.parse_events(complete)["text"], "answer")
+        self.assertFalse(runner.parse_events(b'{"type":"turn.failed"}\n')["completed"])
+        self.assertFalse(runner.parse_events(b'partial output')["completed"])
+        self.assertFalse(runner.parse_events(complete + b'{"type":"error"}\n')["completed"])
 
     def test_public_scan_examples(self):
         blocked = ["sk-" + "a" * 24, "ghp_" + "a" * 24,
@@ -62,6 +101,14 @@ class SkillFiles(unittest.TestCase):
                    "/" + "home/user/secret", chr(92) * 2 + "server" + chr(92) + "private"]
         for sample in blocked:
             self.assertIsNotNone(SENSITIVE.search(sample))
+        formula = {"nested": [{"math": chr(92) + "frac{1}{2}"}]}
+        decoded = list(strings_in(json.loads(json.dumps(formula))))
+        self.assertTrue(any("frac" in value for value in decoded))
+        self.assertFalse(any(SENSITIVE.search(value) for value in decoded))
+        secret = {"nested": [{"value": "sk-" + "a" * 24}]}
+        self.assertTrue(any(SENSITIVE.search(value) for value in strings_in(json.loads(json.dumps(secret)))))
+        network_path = chr(92) * 2 + "server" + chr(92) + "private"
+        self.assertTrue(any(SENSITIVE.search(value) for value in strings_in(json.loads(json.dumps([network_path])))))
         for sample in ("https://example.org/docs", "~/.agents/skills",
                        "%USERPROFILE%/.codex/skills", "references/教学流程.md"):
             self.assertIsNone(SENSITIVE.search(sample))

@@ -1,9 +1,10 @@
 """标准库 CLI 对照执行器；模型输出需语义评审，脚本不自动判教学成功。"""
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import hashlib
 import json
 import os
+import queue
+import threading
 from pathlib import Path
 import subprocess
 import urllib.request
@@ -29,11 +30,57 @@ def parse_events(raw):
             'sid': sid, 'commands': commands}
 
 
+def discover_disabled_config(directory):
+    """读取实际技能清单，仅生成本次进程覆盖；不修改用户配置。"""
+    def list_skills(overrides):
+        proc = subprocess.Popen(['codex', '--no-daemon', 'app-server', *overrides],
+                                cwd=directory, stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        messages = queue.Queue()
+        def read():
+            for line in proc.stdout:
+                try:
+                    messages.put(json.loads(line))
+                except ValueError:
+                    continue
+        threading.Thread(target=read, daemon=True).start()
+        threading.Thread(target=lambda: proc.stderr.read(), daemon=True).start()
+        def send(message):
+            proc.stdin.write((json.dumps(message) + '\n').encode('utf-8'))
+            proc.stdin.flush()
+        def receive(identifier):
+            while True:
+                message = messages.get(timeout=45)
+                if message.get('id') == identifier:
+                    if 'error' in message:
+                        raise RuntimeError('skills/list RPC失败；停止对照')
+                    return message['result']
+        try:
+            send({'id': 1, 'method': 'initialize', 'params': {
+                'clientInfo': {'name': 'study-mentor-eval', 'version': '0.2'}}})
+            receive(1)
+            send({'method': 'initialized', 'params': {}})
+            send({'id': 2, 'method': 'skills/list', 'params': {
+                'cwds': [str(directory)], 'forceReload': True}})
+            return receive(2)['data'][0]['skills']
+        finally:
+            proc.terminate()
+            proc.wait(timeout=10)
+    paths = sorted({skill['path'] for skill in list_skills([])})
+    config = 'skills.config=[' + ','.join(
+        '{path=' + json.dumps(path) + ',enabled=false}' for path in paths) + ']'
+    if any(skill.get('enabled', True) for skill in list_skills(['-c', config])):
+        raise RuntimeError('普通条件仍有启用Skill，停止而非生成污染基线')
+    target = directory / '禁用覆盖配置.json'
+    target.write_text(json.dumps({'config': config, 'remaining': []}, ensure_ascii=False), encoding='utf-8')
+    return target
+
+
 def model_turn(args, condition, case, suffix, prompt, sid=None):
     label = condition + '_' + case['id'] + suffix
     result_path = args.output / (label + '.json')
     if result_path.exists():
-        return json.loads(result_path.read_text(encoding='utf-8'))
+        raise FileExistsError('已有结果不得覆盖或混用；请为新一轮测试创建新的输出目录')
     workspace = args.output / 'workspaces' / condition
     workspace.mkdir(parents=True, exist_ok=True)
     config = json.loads(args.disable_config.read_text(encoding='utf-8'))['config']
@@ -86,7 +133,7 @@ def run_case(args, condition, case):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--disable-config', type=Path, required=True,
+    parser.add_argument('--disable-config', type=Path,
                         help='由实际 skills/list 生成并验证全禁用的进程覆盖JSON，不含凭据')
     parser.add_argument('--conditions', nargs='+', choices=['ordinary', 'v013', 'v02'], required=True)
     parser.add_argument('--split', choices=['dev', 'heldout', 'all'], default='all')
@@ -98,6 +145,8 @@ def main():
     if not 1 <= args.workers <= 2:
         parser.error('workers须为1或2，避免大量并发模型请求')
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.disable_config is None:
+        args.disable_config = discover_disabled_config(args.output)
     cases = json.loads((ROOT / 'tests/V0.2案例.json').read_text(encoding='utf-8'))
     assert len({c['id'] for c in cases}) == len(cases)
     tasks = [(condition, c) for c in cases for condition in args.conditions
