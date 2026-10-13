@@ -2,6 +2,9 @@
 学习记录/
 私人材料/
 local-data/
+learning-state.json
+learning-state.json.lock
+learning-state.*.tmp
 .env
 .env.*
 !.env.example

@@ -43,6 +43,10 @@ class SkillFiles(unittest.TestCase):
                      "docs/V0.2设计规划.md", "tests/真实教学验收记录.md",
                      "tests/桌面教学验收记录.md", "tests/多语言教学验收.md",
                      "references/错因诊断.md", "tests/V0.2案例.json", "tests/V0.2评分标准.md",
+                     "references/学习连续性.md", "references/学习记录格式.md",
+                     "scripts/learning_store.py", "tests/学习连续性验证.py",
+                     "tests/V0.3连续性验收.md", "examples/跨会话学习示例.md",
+                     "references/自适应复习.md", "tests/V0.3第三阶段验收.md",
                      "tests/运行对照测试.py", "tests/V0.2对照结果.json", "tests/V0.2对比报告.md",
                      "references/教学流程.md", "references/状态与扩展约定.md",
                      "examples/百分比教学示例.md", "tests/人工教学验证.md"):
