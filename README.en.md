@@ -2,19 +2,27 @@
 
 [English](README.en.md) | [简体中文](README.md)
 
-**V0.6.3 Experimental · [v0.6.3-experimental.1 Release](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.6.3-experimental.1) · [Stable v0.1.3](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.1.3)**
+**[v0.6.5 Stable · Latest Release](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.6.5) · [Historical experimental v0.6.3](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.6.3-experimental.1)**
 
-AI Study Mentor is an experimental adaptive learning framework for personal study, AI developers and Agent users. This release retains teaching, error diagnosis and learning continuity while adding:
+**AI Study Mentor v0.6.5 is the personal stable-use edition**, a single-user local learning framework for Agents that support Skills, file access and Python tools. Stable is a maintenance designation, not evidence of improved learning, guaranteed grades or universal platform compatibility.
 
-- **Material import:** explicitly supplied PDF/PPTX/TXT files produce chapter drafts before confirmed course creation. Legacy PPT requires conversion; no OCR, automatic download or upload.
-- **Multidimensional observations:** conceptual understanding, technical expression, application and transfer are tracked separately in existing evidence summaries. Wording gaps can remain pending, without repetitive correction or deletion of history.
-- **Optional learning notes:** based on the actual session, separating materials, learner wording, evidence and AI suggestions. Authorized saving creates a new file, independent of learning state.
+Included capabilities:
 
-**User flow: import materials → learn → finish a stage → optionally generate review notes → save learning progress → restore next time.** See the [Chinese student guide](docs/普通学生使用指南.md), [notes guide](docs/V0.6.3学习笔记使用指南.md) and [release notes](docs/v0.6.3-experimental.1发布说明.md).
+- Explicit material registration, outline drafts and confirmed PDF/PPTX/TXT import.
+- Course/chapter/point management, goal diagnosis, teaching, exercises and error feedback.
+- Separate evidence observations for understanding, technical expression, application and transfer.
+- Authorized persistence, fresh-session recovery, unfinished questions and related-task review.
+- Optional unit checks and workflow states; assessment completion is not full mastery.
+- Read-only review suggestions, distinguishing suggested dates from actual attempts without inferring forgetting from absence.
+- Optional actual-session notes, separating materials, learner wording, evidence and AI suggestions; new files preserve history.
 
-167 automated checks and the official Skill format validator passed. Large-scale real-user testing is incomplete; note quality, assessment accuracy and real-course continuity still need validation. Improved learning outcomes are not established. Earlier version results below are historical, not evidence that all new behavior has been learner-tested.
+**Flow: import → confirm goals → learn/practice → optional unit check/notes → authorize progress saving → restore or view review suggestions.** See the [Chinese user guide](docs/普通学生使用指南.md), [review guide](docs/V0.6.5复习使用指南.md) and [Stable release notes](docs/v0.6.5发布说明.md).
 
-Local import/persistence require an Agent with file access and Python tools. Ordinary DeepSeek uses [manual handoff](docs/DeepSeek使用指南.md), without automatic integration; its independently copied instructions do not automatically gain the new assessment or notes module. Stable tags are unchanged.
+192 automated checks and the official Skill validator passed before release. These validate formats, file safety and compatibility, not teaching semantics or learning outcomes. Large-scale real-user testing remains incomplete; note quality, unit tasks and real-course continuity require real use.
+
+Local features require file permissions and Python3.10+; PDF reading additionally requires pypdf. No OCR/decryption; legacy PPT requires conversion. Outline extraction is not full textbook understanding. Other Agents are not fully validated. DeepSeek retains [manual handoff](docs/DeepSeek使用指南.md), without API integration, automatic sync or local-file access; its standalone instructions do not automatically gain later features. No databases, profiles, background reminders, multi-user or website features. Keep personal data outside Git.
+
+Historical reports retain their original scope; earlier experimental releases and tags are preserved.
 
 ## Who this is for
 
@@ -26,7 +34,7 @@ This repository provides a framework and Skill component for users who can confi
 
 The text-based teaching rules are intended for reuse in environments supporting Agent Skills. Installation and behavior have primarily been tested in Codex; compatibility with every Agent has not been verified. Other environments must check skill discovery, reference loading, file permissions and Python execution for local saving.
 
-See the [historical V0.3 notes](docs/V0.3实验版本说明.md); the current scope and limitations are in the V0.6.3 notes above.
+See the [historical V0.3 notes](docs/V0.3实验版本说明.md); the current scope and limitations are in the Stable notes above.
 
 ## Why an explanation may not lead to understanding
 
@@ -53,13 +61,13 @@ Phase 3 checks: 35 storage/recovery/review tests and 7 file checks passed; two f
 
 Additional pre-release checks passed for English teaching, authorized saving, fresh-session recovery, same-day related-task review and switching to Chinese, plus independent Chinese A–E regressions. Real-clock day one is complete; day two awaits 24 actual hours. The three-person usability trial is prepared but not executed. See the [pre-release acceptance report](tests/V0.3发布前验收.md); full acceptance remains incomplete. The maintainer authorized an experimental pre-release with these disclosed limitations; this does not imply all acceptance gates passed.
 
-For the personal pilot, see the [Chinese usage guide](examples/真实使用指南.md) and [blank feedback template](tests/个人真实使用记录模板.md). Keep completed feedback outside the repository. The [V0.3 pre-release](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.3.0-experimental.1) documents historical features; install V0.6.3 from the Release link above; the v0.1.3 stable download does not include them.
+For the personal pilot, see the [Chinese usage guide](examples/真实使用指南.md) and [blank feedback template](tests/个人真实使用记录模板.md). Keep completed feedback outside the repository. The [V0.3 pre-release](https://github.com/meiyujiaojiao-cloud/ai-study-mentor-skill/releases/tag/v0.3.0-experimental.1) documents historical features; install v0.6.5 from the Release link above; the v0.1.3 stable download does not include them.
 
 ## Install
 
 Use your Agent's skill installation mechanism to load the complete folder, preserving the relative layout of SKILL.md, references/ and scripts/. The following is a **tested Codex installation example**; paths and invocation syntax may differ in other clients.
 
-1. Download the V0.6.3 Release linked above; the main branch remains an older version. Extract the ZIP and rename the extracted folder to `ai-study-mentor-skill` if it has a branch or version suffix.
+1. Download the v0.6.5 Release linked above. Extract the ZIP and rename the extracted folder to `ai-study-mentor-skill` if it has a branch or version suffix.
 2. Copy the complete folder into `~/.agents/skills/`. For a project-only installation, use `.agents/skills/` inside that project. Keep `SKILL.md` directly inside the skill folder, with all references included. Compare an existing installation before replacing it.
 3. On Windows, press **Win + R**, enter `%USERPROFILE%`, then create/open `.agents` and its `skills` folder. Copy the whole skill folder there.
 4. Start a new Codex chat. Type `$ai-study-mentor-skill`, select the matching skill candidate, and send: **Use $ai-study-mentor-skill to teach me percentage discounts in English.**
@@ -144,3 +152,7 @@ Observations stay in response_summary text; reasoning_summary contains only the 
 At session end, offer one choice: generate review notes, continue learning, or skip notes. No automatic generation or saving. Notes cover actual session concepts, learner explanations, observed errors, verified/pending abilities, real questions and answers, and review suggestions. AI additions must not be presented as the learner's understanding. Course/chapter/point and evidence references use actual context; unsaved work is clearly identified.
 
 Authorized file saving creates a separate Markdown file without overwriting earlier notes or changing learning state. Deleting notes cannot delete evidence. Existing teaching, assessment, import, persistence and manual DeepSeek handoff remain unchanged. See [rules](references/学习笔记.md), [template](examples/学习笔记模板.md) and [acceptance](tests/V0.6.3学习笔记验收.md). The saver does not generate or semantically validate notes; real-user content quality remains pending, and standalone DeepSeek instructions are unchanged.
+
+## V0.6.4 optional unit checks (included in v0.6.5)
+
+After explicitly finishing a unit stage, users may choose a check, notes or stopping. Three to five tasks cover understanding, technical expression, application and combined transfer, one real answer at a time. Reports describe supported strengths, open checks and next-step choices rather than scores or total mastery. Authorized saving uses a separate record through existing tools, preserving point evidence and notes. Restoring the check requires its explicit record path; no automatic unit index is added. See [rules](references/单元检测.md), [template](examples/单元检测报告模板.md) and [acceptance](tests/V0.6.4单元检测验收.md). Model behavior and real-user task quality remain untested; standalone DeepSeek instructions are unchanged.

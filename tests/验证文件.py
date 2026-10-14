@@ -56,6 +56,11 @@ class SkillFiles(unittest.TestCase):
                      "references/教学评估.md", "docs/V0.6.2教学评估使用说明.md", "tests/V0.6.2教学评估验收.md", "tests/教学评估兼容验证.py",
                      "references/学习笔记.md", "examples/学习笔记模板.md", "docs/V0.6.3学习笔记使用指南.md",
                      "scripts/save_learning_note.py", "tests/学习笔记验证.py", "tests/V0.6.3学习笔记验收.md",
+                     "references/单元检测.md", "examples/单元检测报告模板.md", "docs/V0.6.4单元检测使用指南.md",
+                     "tests/单元检测兼容验证.py", "tests/V0.6.4单元检测验收.md",
+                     "scripts/unit_status.py", "references/单元状态.md", "tests/单元状态验证.py", "tests/V0.6.4.1单元状态验收.md",
+                     "scripts/review_suggestions.py", "references/复习建议.md", "docs/V0.6.5复习使用指南.md",
+                     "tests/复习建议验证.py", "tests/V0.6.5复习建议验收.md",
                      "tests/运行对照测试.py", "tests/V0.2对照结果.json", "tests/V0.2对比报告.md",
                      "references/教学流程.md", "references/状态与扩展约定.md",
                      "examples/百分比教学示例.md", "tests/人工教学验证.md"):
