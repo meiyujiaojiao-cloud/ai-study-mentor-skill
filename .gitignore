@@ -49,3 +49,17 @@ build/
 *.sqlite3
 *.db
 .netrc
+
+# 私人学习库导航、备份与本机入口不应公开
+学习库索引.json
+学习入口.md
+备份/
+
+# 私人课程向导与教材登记文件
+course.json
+material.json
+教材导入记录.json
+教材导入草稿.json
+教材目录预览.md
+学习笔记/
+学习笔记-*.md
